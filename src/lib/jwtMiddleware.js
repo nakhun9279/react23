@@ -6,10 +6,13 @@ const jwtMiddleware = (ctx, next) => {
   if (!token) return next(); // 토큰이 없음
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    ctx.state.user = {
+      _id: decoded._id,
+      username: decoded.username,
+    };
     console.log(decoded);
     return next();
-} catch (e) {
-    // 토큰 검증 실패
+  } catch (e) {
     return next();
   }
 };
@@ -17,3 +20,4 @@ const jwtMiddleware = (ctx, next) => {
 
 
 export default jwtMiddleware;
+
