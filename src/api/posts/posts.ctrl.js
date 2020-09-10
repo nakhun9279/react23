@@ -1,5 +1,20 @@
 import Post from '../../models/post';
+import Post from '../../models/post';
+import mongoose from 'mongoose';
 
+
+const { ObjectId } = mongoose.Types;
+
+
+
+export const checkObjectId = (ctx, next) => {
+  const { id } = ctx.params;
+  if (!ObjectId.isValid(id)) {
+    ctx.status = 400; // Bad Request
+    return;
+  }
+  return next();
+};
 
 /*
   POST /api/posts
@@ -76,9 +91,9 @@ export const remove = async ctx => {
 /*
   PATCH /api/posts/:id
   {
-    title: ‘수정’,
-    body: ‘수정 내용’,
-    tags: [‘수정’, ‘태그’]
+    title: '수정’,
+    body: '수정 내용’,
+    tags: ['수정’, '태그’]
   }
 */
 export const update = async ctx => {
