@@ -1,11 +1,17 @@
 import Router from 'koa-router';
-import posts from './posts';
-import auth from './auth';
+import * as postsCtrl from './posts.ctrl';
+import checkLoggedIn from '../../lib/checkLoggedIn';
 
-const api = new Router();
+const posts = new Router();
 
-api.use('/posts', posts.routes());
-api.use('/auth', auth.routes());
+posts.get('/', postsCtrl.list);
+posts.post('/', checkLoggedIn, postsCtrl.write);
 
-// 라우터를 내보냅니다.
-export default api;
+const post = new Router(); // /api/posts/:id
+post.get('/', postsCtrl.read);
+post.delete('/', checkLoggedIn, postsCtrl.remove);
+post.patch('/', checkLoggedIn, postsCtrl.update);
+
+posts.use('/:id', postsCtrl.checkObjectId, post.routes());
+
+export default posts;
