@@ -44,10 +44,15 @@ const { username, password } = ctx.request.body;
 
       
       ctx.body = user.serialize();
-     } catch (e) {
-        ctx.throw(500, e);
-      }
-    };
+      const token = user.generateToken();
+      ctx.cookies.set('access_token', token, {
+        maxAge: 1000 * 60 * 60 * 24 * 7, // 7일
+        httpOnly: true,
+      });
+    } catch (e) {
+      ctx.throw(500, e);
+    }
+  };
 
     /*
   POST /api/auth/login
@@ -82,6 +87,11 @@ try {
       return;
     }
     ctx.body = user.serialize();
+    const token = user.generateToken();
+    ctx.cookies.set('access_token', token, {
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 7일
+      httpOnly: true,
+    });
   } catch (e) {
     ctx.throw(500, e);
   }
