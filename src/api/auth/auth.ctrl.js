@@ -63,7 +63,13 @@ const { username, password } = ctx.request.body;
 */
 export const login = async ctx => {
   const { username, password } = ctx.request.body;
-
+/*
+  POST /api/auth/logout
+*/
+export const logout = async ctx => {
+  ctx.cookies.set('access_token');
+  ctx.status = 204; // No Content
+};
 
 // username, password가 없으면 에러 처리
   if (!username || !password) {
